@@ -10,6 +10,7 @@ var bodyParser = require('body-parser');
 var multer = require('multer');
 var Excel = require('exceljs');
 var nanp = require('./nanp/nanp-script');
+var rimraf = require('rimraf');
 
 app.set('trust proxy', true)
 
@@ -29,13 +30,13 @@ app.use('/', express.static(__dirname + '/public'));
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
         if (fs.existsSync(__dirname + "/uploads/" + req.ip.split(':')[req.ip.split(':').length - 1])) {
-            fs.rmdirSync(__dirname + "/uploads/" + req.ip.split(':')[req.ip.split(':').length - 1]);
-            fs.mkdirSync(__dirname + "/uploads/" + req.ip.split(':')[req.ip.split(':').length - 1]);
-            cb(null, __dirname + "/uploads/" + req.ip.split(':')[req.ip.split(':').length - 1])
-        } else {
-            fs.mkdirSync(__dirname + "/uploads/" + req.ip.split(':')[req.ip.split(':').length - 1]);
-            cb(null, __dirname + "/uploads/" + req.ip.split(':')[req.ip.split(':').length - 1])
+            rimraf.sync(__dirname + "/uploads/" + req.ip.split(':')[req.ip.split(':').length - 1]);
         }
+
+        fs.mkdirSync(__dirname + "/uploads/" + req.ip.split(':')[req.ip.split(':').length - 1]);
+        cb(null, __dirname + "/uploads/" + req.ip.split(':')[req.ip.split(':').length - 1]);
+
+
 
     },
     filename: function (req, file, cb) {
@@ -54,7 +55,6 @@ server.listen(process.env.PORT || 3000);
 
 app.post('/upload', upload.single('file'), function (req, res) {
 
-    console.log(req.connection.remoteAddress)
 
     function find_regions() {
         var input_filename = __dirname + "/uploads/" + req.ip.split(':')[req.ip.split(':').length - 1] + '/' + req.file.originalname;
@@ -121,7 +121,6 @@ app.post('/upload', upload.single('file'), function (req, res) {
 });
 
 io.on('connection', function (socket) {
-    console.log('hello')
     ss(socket).on('file', function (stream) {
         fs.createReadStream(__dirname + '/uploads/' + socket.handshake.address.split(':')[socket.handshake.address.split(':').length - 1] + '/output.xlsx').pipe(stream);
     });
