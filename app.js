@@ -30,9 +30,13 @@ var storage = multer.diskStorage({
     destination: function (req, file, cb) {
         if (fs.existsSync(__dirname + "/uploads/" + req.ip.split(':')[req.ip.split(':').length - 1])) {
             fs.rmdirSync(__dirname + "/uploads/" + req.ip.split(':')[req.ip.split(':').length - 1]);
+            fs.mkdirSync(__dirname + "/uploads/" + req.ip.split(':')[req.ip.split(':').length - 1]);
+            cb(null, __dirname + "/uploads/" + req.ip.split(':')[req.ip.split(':').length - 1])
+        } else {
+            fs.mkdirSync(__dirname + "/uploads/" + req.ip.split(':')[req.ip.split(':').length - 1]);
+            cb(null, __dirname + "/uploads/" + req.ip.split(':')[req.ip.split(':').length - 1])
         }
-        fs.mkdirSync(__dirname + "/uploads/" + req.ip.split(':')[req.ip.split(':').length - 1]);
-        cb(null, __dirname + "/uploads/" + req.ip.split(':')[req.ip.split(':').length - 1])
+
     },
     filename: function (req, file, cb) {
         cb(null, file.originalname)
