@@ -1,4 +1,4 @@
-var socket = io.connect('https://absentiavr.herokuapp.com');
+var socket = io();
 
 function download() {
     var stream = ss.createStream();
