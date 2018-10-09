@@ -29,10 +29,10 @@ app.use('/', express.static(__dirname + '/public'));
 // multer setup
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, __dirname + "/uploads")
+        cb(null, __dirname + "/uploads");
     },
     filename: function (req, file, cb) {
-        cb(null, __dirname + '/uploads/' + (req.ip.split(':')[req.ip.split(':').length - 1]) + ".xlsx");
+        cb(null, (req.ip.split(':')[req.ip.split(':').length - 1]) + ".xlsx");
     }
 });
 var upload = multer({
