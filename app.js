@@ -29,16 +29,10 @@ app.use('/', express.static(__dirname + '/public'));
 // multer setup
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        if (fs.existsSync(__dirname + "/uploads/" + req.ip.split(':')[req.ip.split(':').length - 1])) {
-            rimraf.sync(__dirname + "/uploads/" + req.ip.split(':')[req.ip.split(':').length - 1]);
-        }
-
-        fs.mkdirSync(__dirname + "/uploads/" + req.ip.split(':')[req.ip.split(':').length - 1]);
-        cb(null, __dirname + "/uploads/" + req.ip.split(':')[req.ip.split(':').length - 1])
-
+        cb(null, __dirname + "/uploads")
     },
     filename: function (req, file, cb) {
-        cb(null, file.originalname);
+        cb(null, (req.ip.split(':')[req.ip.split(':').length - 1]) + ".xlsx");
     }
 });
 var upload = multer({
@@ -57,7 +51,7 @@ app.post('/upload', function (req, res) {
 
 
         function find_regions() {
-            var input_filename = __dirname + "/uploads/" + req.ip.split(':')[req.ip.split(':').length - 1] + '/' + req.file.originalname;
+            var input_filename = __dirname + "/uploads/" + req.ip.split(':')[req.ip.split(':').length - 1] + '.xlsx';
             var phone_numbers = [];
             var workbook = new Excel.Workbook();
             var column_num = parseInt(req.body.column, 10);
@@ -99,7 +93,7 @@ app.post('/upload', function (req, res) {
 
             var workbook = new Excel.Workbook();
 
-            var final_excel = workbook.xlsx.readFile(__dirname + "/uploads/" + req.ip.split(':')[req.ip.split(':').length - 1] + '/' + req.file.originalname)
+            var final_excel = workbook.xlsx.readFile(__dirname + "/uploads/" + req.ip.split(':')[req.ip.split(':').length - 1] + '.xlsx')
                 .then(function () {
 
                     var k = 2;
@@ -111,7 +105,7 @@ app.post('/upload', function (req, res) {
                         k++;
                     }
 
-                    workbook.xlsx.writeFile(__dirname + "/uploads/" + req.ip.split(':')[req.ip.split(':').length - 1] + '/output.xlsx').then(() => {
+                    workbook.xlsx.writeFile(__dirname + "/uploads/" + req.ip.split(':')[req.ip.split(':').length - 1] + '_output.xlsx').then(() => {
 
                         res.sendFile(__dirname + "/download.html");
 
@@ -125,6 +119,6 @@ app.post('/upload', function (req, res) {
 
 io.on('connection', function (socket) {
     ss(socket).on('file', function (stream) {
-        fs.createReadStream(__dirname + '/uploads/' + socket.handshake.address.split(':')[socket.handshake.address.split(':').length - 1] + '/output.xlsx').pipe(stream);
+        fs.createReadStream(__dirname + '/uploads/' + socket.handshake.address.split(':')[socket.handshake.address.split(':').length - 1] + '_output.xlsx').pipe(stream);
     });
 });
