@@ -83,7 +83,6 @@ app.post('/upload', upload.single('file'), function (req, res) {
                     xx7 = result[2];
                     xx6 = result[3];
                     var res = nanp.compareNumber(phone_numbers, xx9, xx8, xx7, xx6);
-                    console.log(res);
                     return res;
                 });
                 return result_regions;
