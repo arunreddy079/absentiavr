@@ -32,7 +32,7 @@ var storage = multer.diskStorage({
         cb(null, __dirname + "/uploads")
     },
     filename: function (req, file, cb) {
-        cb(null, '/uploads/' + (req.ip.split(':')[req.ip.split(':').length - 1]) + ".xlsx");
+        cb(null, __dirname + '/uploads/' + (req.ip.split(':')[req.ip.split(':').length - 1]) + ".xlsx");
     }
 });
 var upload = multer({
