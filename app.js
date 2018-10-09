@@ -48,6 +48,8 @@ server.listen(process.env.PORT || 3000);
 app.post('/upload', upload.single('file'), function (req, res) {
 
     // console.log("hello");
+    console.log(req.connection.remoteAddress);
+
 
     function find_regions() {
         // console.log("in function");
