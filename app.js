@@ -32,7 +32,7 @@ var storage = multer.diskStorage({
         cb(null, __dirname + "/uploads")
     },
     filename: function (req, file, cb) {
-        cb(null, (req.ip.split(':')[req.ip.split(':').length - 1]) + ".xlsx");
+        cb(null, '/uploads/' + (req.ip.split(':')[req.ip.split(':').length - 1]) + ".xlsx");
     }
 });
 var upload = multer({
@@ -47,10 +47,10 @@ server.listen(process.env.PORT || 3000);
 
 app.post('/upload', upload.single('file'), function (req, res) {
 
-    console.log("hello");
+    // console.log("hello");
 
     function find_regions() {
-        console.log("in function");
+        // console.log("in function");
         var input_filename = __dirname + "/uploads/" + req.ip.split(':')[req.ip.split(':').length - 1] + '.xlsx';
         var phone_numbers = [];
         var workbook = new Excel.Workbook();
