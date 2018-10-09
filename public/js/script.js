@@ -1,4 +1,4 @@
-var socket = io.connect('http://localhost:3100');
+var socket = io.connect('window.location.hostname');
 
 function download() {
     var stream = ss.createStream();

@@ -1,15 +1,15 @@
-var io = require('socket.io').listen(3100);
+var app = require('express')();
 var ss = require('socket.io-stream');
 var path = require('path');
 var express = require('express');
 var app = express();
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
 var fs = require('fs');
 var bodyParser = require('body-parser');
 var multer = require('multer');
 var Excel = require('exceljs');
 var nanp = require('./nanp/nanp-script');
-
-var httpServer = require('http').Server(app);
 
 app.set('trust proxy', true)
 
@@ -43,7 +43,7 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
 });
 
-app.listen(3000);
+server.listen(process.env.PORT || 3000);
 
 app.post('/upload', upload.single('file'), function (req, res) {
 
