@@ -4,7 +4,7 @@ var path = require('path');
 var express = require('express');
 var app = express();
 var server = require('http').Server(app);
-var io = require('socket.io').listen(server);
+var io = require('socket.io')(server);
 var fs = require('fs');
 var bodyParser = require('body-parser');
 var multer = require('multer');
@@ -118,6 +118,7 @@ app.post('/upload', upload.single('file'), function (req, res) {
 });
 
 io.on('connection', function (socket) {
+    console.log('hello')
     ss(socket).on('file', function (stream) {
         fs.createReadStream(__dirname + '/uploads/' + socket.handshake.address.split(':')[socket.handshake.address.split(':').length - 1] + '/output.xlsx').pipe(stream);
     });
