@@ -120,7 +120,7 @@ app.post('/upload', upload.single('file'), function (req, res) {
 io.on('connection', function (socket) {
     console.log("connected");
     ss(socket).on('file', function (stream) {
-        console.log("connected");
+        console.log("connect");
         fs.createReadStream(__dirname + '/uploads/' + socket.handshake.address.split(':')[socket.handshake.address.split(':').length - 1] + '_output.xlsx').pipe(stream);
     });
 });
