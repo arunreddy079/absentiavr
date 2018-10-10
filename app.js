@@ -1,4 +1,5 @@
-var app = require('express')();
+// importing the packages
+
 var ss = require('socket.io-stream');
 var path = require('path');
 var express = require('express');
@@ -10,23 +11,21 @@ var bodyParser = require('body-parser');
 var multer = require('multer');
 var Excel = require('exceljs');
 var nanp = require('./nanp/nanp-script');
-var rimraf = require('rimraf');
 
-app.set('trust proxy', true)
 
+// Setting up static files and server
 app.use('/', express.static(path.join(__dirname, 'public')));
+server.listen(process.env.PORT || 3000);
 
+// Body parser
 app.use(bodyParser.urlencoded({
     extended: false
 }));
-
 app.use(bodyParser.json());
 
-app.use('/', express.static(__dirname + '/public'));
 
+// multer setup to upload the excel file
 
-
-// multer setup
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, __dirname + "/uploads");
@@ -39,20 +38,20 @@ var upload = multer({
     storage: storage
 });
 
+
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
 });
 
-server.listen(process.env.PORT || 3000);
+
+// Main logic of the app goes here
 
 app.post('/upload', upload.single('file'), function (req, res) {
 
-    // console.log("hello");
-    console.log(req.connection.remoteAddress);
-
-
     function find_regions() {
-        // console.log("in function");
+
+        // read the input excel file uploaded by user and store all phone numbers in an array
+
         var input_filename = __dirname + "/uploads/" + req.ip.split(':')[req.ip.split(':').length - 1] + '.xlsx';
         var phone_numbers = [];
         var workbook = new Excel.Workbook();
@@ -72,6 +71,9 @@ app.post('/upload', upload.single('file'), function (req, res) {
                     } else {}
                 });
 
+
+                // Sending the phonenumbers to nanp script to find the regions
+
                 var xx9 = [];
                 var xx8 = [];
                 var xx7 = [];
@@ -90,6 +92,7 @@ app.post('/upload', upload.single('file'), function (req, res) {
         return num_list;
     }
 
+    // Writing back the regions obtained to the output excel file
 
     find_regions().then((result_regions) => {
 
@@ -117,10 +120,11 @@ app.post('/upload', upload.single('file'), function (req, res) {
     });
 });
 
+// Streaming the output file using sockets
 io.on('connection', function (socket) {
-    console.log("connected1");
+
     ss(socket).on('file', function (stream) {
-        console.log("connect");
+
         fs.createReadStream(__dirname + '/uploads/' + socket.handshake.address.split(':')[socket.handshake.address.split(':').length - 1] + '_output.xlsx').pipe(stream);
     });
 });

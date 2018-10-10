@@ -40,7 +40,6 @@ var readFile = function () {
 }
 
 var compareNumber = function (numbers_to_compare, number_regions_9xx, number_regions_8xx, number_regions_7xx, number_regions_6xx) {
-  console.log(numbers_to_compare.length);
   var regions = [];
   for (var i = 0; i < numbers_to_compare.length; i++) {
     var number = "" + numbers_to_compare[i];
@@ -64,14 +63,7 @@ function compareWithRegex(number, numbers) {
   return numbers[number.slice(0, 4)];
 }
 
-// readFile().then((result) => {
-//   number_regions_9xx = result[0];
-//   number_regions_8xx = result[1];
-//   number_regions_7xx = result[2];
-//   number_regions_6xx = result[3];
-//   console.log(compareNumber([9000]))
-// });
-
+// exported inorder to use them in app.js
 module.exports = {
   compareNumber: compareNumber,
   readFile: readFile,
