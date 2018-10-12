@@ -112,7 +112,7 @@ app.post('/upload', upload.single('file'), function (req, res) {
 
                 workbook.xlsx.writeFile(__dirname + "/uploads/" + req.ip.split(':')[req.ip.split(':').length - 1] + '_output.xlsx').then(() => {
 
-                    res.sendFile(__dirname + "/uploads/" + req.ip.split(':')[req.ip.split(':').length - 1] + '_output.xlsx');
+                    res.sendFile(__dirname + '/download.html');
 
                 });
             });
